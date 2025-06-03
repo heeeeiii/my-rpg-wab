@@ -146,16 +146,16 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 수능 맞춤 퀘스트/업적 (보상 포함)
     const dailyQuestList = [
-        { text: "국어 비문학 지문 2개 풀기", id: "daily1", reward: { xp: 10, gold: 20 } },
+        { text: "국어 비문학 지문 2개 풀기", id: "daily1", reward: { xp: 15, gold: 25 } },
         { text: "수학 문제집 20문제 풀기", id: "daily2", reward: { xp: 15, gold: 25 } },
-        { text: "영어 단어 30개 암기", id: "daily3", reward: { xp: 10, gold: 20 } },
-        { text: "과탐 오답노트 1회 복습", id: "daily4", reward: { xp: 12, gold: 22 } }
+        { text: "영어 단어 30개 암기", id: "daily3", reward: { xp: 15, gold: 25 } },
+        { text: "과탐 오답노트 1회 복습", id: "daily4", reward: { xp: 15, gold: 25 } }
     ];
     const weeklyQuestList = [
         { text: "모의고사 1회 실전처럼 풀기", id: "weekly1", reward: { xp: 50, gold: 100 } },
-        { text: "수학 심화문제 50문제 풀기", id: "weekly2", reward: { xp: 40, gold: 80 } },
-        { text: "국어 문학 작품 3편 정리", id: "weekly3", reward: { xp: 35, gold: 70 } },
-        { text: "영어 듣기 5회분 연습", id: "weekly4", reward: { xp: 30, gold: 60 } }
+        { text: "수학 심화문제 50문제 풀기", id: "weekly2", reward: { xp: 50, gold: 100 } },
+        { text: "국어 문학 작품 3편 정리", id: "weekly3", reward: { xp: 50, gold: 100 } },
+        { text: "영어 듣기 5회분 연습", id: "weekly4", reward: { xp: 50, gold: 100 } }
     ];
     const achievementList = [
         { text: "첫 공부 시작! (누적 공부 1시간)", id: "ach1", reward: { xp: 100, gold: 200 } },
@@ -297,8 +297,21 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 퀘스트 렌더링
     function renderQuests() {
+        // 반복퀘스트
+        const repeatState = loadRepeatQuestState();
+        const repeatUl = document.getElementById('repeat-quests');
+        repeatUl.innerHTML = '';
+        repeatQuestList.forEach(q => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${q.text}
+                <span style="color:#2196F3; font-size:13px;">(+${q.reward.xp}XP, +${q.reward.gold}골드)</span>
+                <button class="complete-repeat-quest" data-quest-id="${q.id}" ${repeatState[q.id] ? 'disabled' : ''}>${repeatState[q.id] ? '완료됨' : '완료'}</button>
+            `;
+            repeatUl.appendChild(li);
+        });
+
         // 일일퀘스트
-        const dailyQuestList = getDailyQuestList();
         const dailyState = loadQuestState('daily');
         const dailyUl = document.getElementById('daily-quests');
         dailyUl.innerHTML = '';
@@ -311,8 +324,8 @@ document.addEventListener('DOMContentLoaded', () => {
             `;
             dailyUl.appendChild(li);
         });
+
         // 주간퀘스트
-        const weeklyQuestList = getWeeklyQuestList();
         const weeklyState = loadQuestState('weekly');
         const weeklyUl = document.getElementById('weekly-quests');
         weeklyUl.innerHTML = '';
@@ -324,20 +337,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="complete-quest" data-quest-id="${q.id}" ${weeklyState[q.id] ? 'disabled' : ''}>${weeklyState[q.id] ? '완료됨' : '완료'}</button>
             `;
             weeklyUl.appendChild(li);
-        });
-        // 반복퀘스트
-        const repeatQuestList = getRepeatQuestList();
-        const repeatState = loadRepeatQuestState();
-        const repeatUl = document.getElementById('repeat-quests');
-        repeatUl.innerHTML = '';
-        repeatQuestList.forEach(q => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                ${q.text}
-                <span style="color:#2196F3; font-size:13px;">(+${q.reward.xp}XP, +${q.reward.gold}골드)</span>
-                <button class="complete-repeat-quest" data-quest-id="${q.id}" ${repeatState[q.id] ? 'disabled' : ''}>${repeatState[q.id] ? '완료됨' : '완료'}</button>
-            `;
-            repeatUl.appendChild(li);
         });
         // 업적
         const achState = loadAchievementState();
@@ -675,8 +674,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // 반복 퀘스트 예시 (매일 반복)
     const repeatQuestList = [
-        { text: "아침 10분 스트레칭", id: "repeat1", reward: { xp: 5, gold: 10 } },
-        { text: "공부 시작 전 책상 정리", id: "repeat2", reward: { xp: 5, gold: 10 } }
+        { text: "아침 10분 스트레칭", id: "repeat1", reward: { xp: 10, gold: 15 } },
+        { text: "공부 시작 전 책상 정리", id: "repeat2", reward: { xp: 10, gold: 15 } }
     ];
 
     // 반복 퀘스트 상태 저장/불러오기
