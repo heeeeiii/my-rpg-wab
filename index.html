@@ -80,6 +80,30 @@
       <ul id="inventory-list"></ul>
       <button id="back-to-main-btn">돌아가기</button>
     </section>
+    <!-- 퀘스트 설정 영역 추가 -->
+    <div id="quest-setup-area" style="display:none;">
+      <h3>나만의 퀘스트 설정 (한 번만 가능)</h3>
+      <div>
+        <b>일일 퀘스트 (최대 4개)</b><br>
+        <input type="text" class="setup-daily" placeholder="일일 퀘스트 1"><br>
+        <input type="text" class="setup-daily" placeholder="일일 퀘스트 2"><br>
+        <input type="text" class="setup-daily" placeholder="일일 퀘스트 3"><br>
+        <input type="text" class="setup-daily" placeholder="일일 퀘스트 4"><br>
+      </div>
+      <div>
+        <b>주간 퀘스트 (최대 4개)</b><br>
+        <input type="text" class="setup-weekly" placeholder="주간 퀘스트 1"><br>
+        <input type="text" class="setup-weekly" placeholder="주간 퀘스트 2"><br>
+        <input type="text" class="setup-weekly" placeholder="주간 퀘스트 3"><br>
+        <input type="text" class="setup-weekly" placeholder="주간 퀘스트 4"><br>
+      </div>
+      <div>
+        <b>반복 퀘스트 (최대 2개)</b><br>
+        <input type="text" class="setup-repeat" placeholder="반복 퀘스트 1"><br>
+        <input type="text" class="setup-repeat" placeholder="반복 퀘스트 2"><br>
+      </div>
+      <button id="save-quest-setup-btn">퀘스트 저장 (저장 후 수정 불가)</button>
+    </div>
   </div>
 </body>
 <script src="script.js"></script>
