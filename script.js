@@ -220,9 +220,85 @@ document.addEventListener('DOMContentLoaded', () => {
         return weekNo;
     }
 
-    // 퀘스트/업적 렌더링
+    // 유저별 퀘스트 저장/불러오기
+    function saveUserQuests(username, quests) {
+        localStorage.setItem('userquests_' + username, JSON.stringify(quests));
+    }
+    function loadUserQuests(username) {
+        const data = localStorage.getItem('userquests_' + username);
+        return data ? JSON.parse(data) : null;
+    }
+
+    // 최초 퀘스트 설정 UI 제어
+    function showQuestSetupIfNeeded(username) {
+        const quests = loadUserQuests(username);
+        const questSetupArea = document.getElementById('quest-setup-area');
+        if (!quests) {
+            // 아직 퀘스트 설정 안 했으면 폼 보여주기
+            questSetupArea.style.display = 'block';
+            statusArea.style.display = 'none';
+        } else {
+            questSetupArea.style.display = 'none';
+            statusArea.style.display = 'block';
+        }
+    }
+
+    // 퀘스트 저장 버튼 이벤트
+    document.getElementById('save-quest-setup-btn').onclick = function() {
+        const username = localStorage.getItem('loginUser');
+        if (!username) return;
+        // 입력값 수집
+        const daily = Array.from(document.getElementsByClassName('setup-daily')).map(i => i.value.trim()).filter(Boolean);
+        const weekly = Array.from(document.getElementsByClassName('setup-weekly')).map(i => i.value.trim()).filter(Boolean);
+        const repeat = Array.from(document.getElementsByClassName('setup-repeat')).map(i => i.value.trim()).filter(Boolean);
+        if (daily.length === 0 || weekly.length === 0) {
+            alert('일일/주간 퀘스트를 최소 1개 이상 입력하세요!');
+            return;
+        }
+        // 저장
+        saveUserQuests(username, { daily, weekly, repeat });
+        alert('퀘스트가 저장되었습니다! 이제부터 수정할 수 없습니다.');
+        document.getElementById('quest-setup-area').style.display = 'none';
+        statusArea.style.display = 'block';
+        renderQuests();
+    };
+
+    // 기존 코드의 퀘스트 목록을 유저별로 불러오도록 변경
+    function getDailyQuestList() {
+        const username = localStorage.getItem('loginUser');
+        const quests = loadUserQuests(username);
+        if (!quests) return [];
+        return quests.daily.map((text, idx) => ({
+            text,
+            id: 'daily' + (idx + 1),
+            reward: { xp: 10 + idx * 5, gold: 20 + idx * 5 }
+        }));
+    }
+    function getWeeklyQuestList() {
+        const username = localStorage.getItem('loginUser');
+        const quests = loadUserQuests(username);
+        if (!quests) return [];
+        return quests.weekly.map((text, idx) => ({
+            text,
+            id: 'weekly' + (idx + 1),
+            reward: { xp: 40 + idx * 10, gold: 80 + idx * 10 }
+        }));
+    }
+    function getRepeatQuestList() {
+        const username = localStorage.getItem('loginUser');
+        const quests = loadUserQuests(username);
+        if (!quests) return [];
+        return quests.repeat.map((text, idx) => ({
+            text,
+            id: 'repeat' + (idx + 1),
+            reward: { xp: 5 + idx * 5, gold: 10 + idx * 5 }
+        }));
+    }
+
+    // 퀘스트 렌더링
     function renderQuests() {
         // 일일퀘스트
+        const dailyQuestList = getDailyQuestList();
         const dailyState = loadQuestState('daily');
         const dailyUl = document.getElementById('daily-quests');
         dailyUl.innerHTML = '';
@@ -236,6 +312,7 @@ document.addEventListener('DOMContentLoaded', () => {
             dailyUl.appendChild(li);
         });
         // 주간퀘스트
+        const weeklyQuestList = getWeeklyQuestList();
         const weeklyState = loadQuestState('weekly');
         const weeklyUl = document.getElementById('weekly-quests');
         weeklyUl.innerHTML = '';
@@ -247,6 +324,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 <button class="complete-quest" data-quest-id="${q.id}" ${weeklyState[q.id] ? 'disabled' : ''}>${weeklyState[q.id] ? '완료됨' : '완료'}</button>
             `;
             weeklyUl.appendChild(li);
+        });
+        // 반복퀘스트
+        const repeatQuestList = getRepeatQuestList();
+        const repeatState = loadRepeatQuestState();
+        const repeatUl = document.getElementById('repeat-quests');
+        repeatUl.innerHTML = '';
+        repeatQuestList.forEach(q => {
+            const li = document.createElement('li');
+            li.innerHTML = `
+                ${q.text}
+                <span style="color:#2196F3; font-size:13px;">(+${q.reward.xp}XP, +${q.reward.gold}골드)</span>
+                <button class="complete-repeat-quest" data-quest-id="${q.id}" ${repeatState[q.id] ? 'disabled' : ''}>${repeatState[q.id] ? '완료됨' : '완료'}</button>
+            `;
+            repeatUl.appendChild(li);
         });
         // 업적
         const achState = loadAchievementState();
@@ -261,19 +352,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 <span class="achievement-status" style="color:${achieved ? '#4CAF50' : '#fff'};">${achieved ? '달성!' : '미달성'}</span>
             `;
             achUl.appendChild(li);
-        });
-        // 반복 퀘스트
-        const repeatState = loadRepeatQuestState();
-        const repeatUl = document.getElementById('repeat-quests');
-        repeatUl.innerHTML = '';
-        repeatQuestList.forEach(q => {
-            const li = document.createElement('li');
-            li.innerHTML = `
-                ${q.text}
-                <span style="color:#2196F3; font-size:13px;">(+${q.reward.xp}XP, +${q.reward.gold}골드)</span>
-                <button class="complete-repeat-quest" data-quest-id="${q.id}" ${repeatState[q.id] ? 'disabled' : ''}>${repeatState[q.id] ? '완료됨' : '완료'}</button>
-            `;
-            repeatUl.appendChild(li);
         });
     }
 
@@ -537,6 +615,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const minutes = String(Math.floor((totalStudyTime % 3600) / 60)).padStart(2, '0');
         const seconds = String(totalStudyTime % 60).padStart(2, '0');
         timerDisplay.innerText = `${hours}:${minutes}:${seconds}`;
+        showQuestSetupIfNeeded(username);
     }
     function afterLogout() {
         statusArea.style.display = 'none';
