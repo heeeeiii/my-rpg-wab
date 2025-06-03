@@ -268,30 +268,33 @@ document.addEventListener('DOMContentLoaded', () => {
         const username = localStorage.getItem('loginUser');
         const quests = loadUserQuests(username);
         if (!quests) return [];
+        // 모든 일일퀘스트 보상 통일
         return quests.daily.map((text, idx) => ({
             text,
             id: 'daily' + (idx + 1),
-            reward: { xp: 10 + idx * 5, gold: 20 + idx * 5 }
+            reward: { xp: 15, gold: 25 }
         }));
     }
     function getWeeklyQuestList() {
         const username = localStorage.getItem('loginUser');
         const quests = loadUserQuests(username);
         if (!quests) return [];
+        // 모든 주간퀘스트 보상 통일
         return quests.weekly.map((text, idx) => ({
             text,
             id: 'weekly' + (idx + 1),
-            reward: { xp: 40 + idx * 10, gold: 80 + idx * 10 }
+            reward: { xp: 50, gold: 100 }
         }));
     }
     function getRepeatQuestList() {
         const username = localStorage.getItem('loginUser');
         const quests = loadUserQuests(username);
         if (!quests) return [];
+        // 모든 반복퀘스트 보상 통일
         return quests.repeat.map((text, idx) => ({
             text,
             id: 'repeat' + (idx + 1),
-            reward: { xp: 5 + idx * 5, gold: 10 + idx * 5 }
+            reward: { xp: 10, gold: 15 }
         }));
     }
 
