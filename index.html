@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나만의 공부 레벨업 RPG</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <!-- 로그인/회원가입 영역 -->
+    <div id="auth-area">
+      <input type="text" id="login-username" placeholder="아이디">
+      <input type="password" id="login-password" placeholder="비밀번호">
+      <button id="login-btn">로그인</button>
+      <button id="show-register-btn">회원가입</button>
+      <button id="logout-btn" style="display:none;">로그아웃</button>
+    </div>
+    <!-- 회원가입 폼 -->
+    <div id="register-area" style="display:none;">
+      <h3>회원가입</h3>
+      <input type="text" id="register-username" placeholder="아이디">
+      <input type="password" id="register-password" placeholder="비밀번호">
+      <input type="text" id="register-nickname" placeholder="닉네임">
+      <button id="register-btn">가입하기</button>
+      <button id="cancel-register-btn">취소</button>
+    </div>
+    <!-- 메인 화면(로그인 후에만 보임) -->
+    <section id="status-area" style="display:none;">
+      <div id="user-info-view">
+        <span><b>닉네임:</b> <span id="view-nickname"></span></span>
+        <span><b>레벨:</b> <span id="view-level"></span></span>
+        <span><b>경험치:</b> <span id="view-xp"></span> / <span id="level-up-xp">100</span> XP</span>
+        <span><b>보유 재화:</b> <span id="view-currency"></span> 골드 💰</span>
+        <button id="inventory-btn">인벤토리</button>
+      </div>
+      <div id="xp-bar-container">
+        <p>현재 경험치 바:</p>
+        <div id="xp-bar">
+          <div id="xp-progress" style="width: 0%;"></div>
+        </div>
+      </div>
+      <section id="quest-achievement-area">
+        <div class="scrollable-content">
+          <h2>📜 퀘스트 & 업적 📜</h2>
+          <div class="quest-section">
+            <h3>일일 퀘스트</h3>
+            <ul id="daily-quests"></ul>
+          </div>
+          <div class="quest-section">
+            <h3>주간 퀘스트</h3>
+            <ul id="weekly-quests"></ul>
+          </div>
+          <div class="quest-section">
+            <h3>반복 퀘스트</h3>
+            <ul id="repeat-quests"></ul>
+          </div>
+          <div class="achievement-section">
+            <h3>업적</h3>
+            <ul id="achievements"></ul>
+          </div>
+        </div>
+      </section>
+      <section id="shop-area">
+        <h2>🏪 상점 🏪</h2>
+        <p style="color:#aaa; font-size:13px;">* 각 아이템은 하루마다 구매횟수가 초기화됩니다.</p>
+        <ul id="shop-items"></ul>
+      </section>
+      <section id="timer-area">
+        <h2>⏱️ 공부 타이머</h2>
+        <div id="timer-display">00:00:00</div>
+        <button id="start-button">시작</button>
+        <button id="stop-button" disabled>정지</button>
+        <button id="reset-button" disabled>초기화</button>
+      </section>
+    </section>
+    <!-- 인벤토리 화면 -->
+    <section id="inventory-area" style="display:none;">
+      <h2>🎒 내 인벤토리</h2>
+      <ul id="inventory-list"></ul>
+      <button id="back-to-main-btn">돌아가기</button>
+    </section>
+  </div>
+</body>
+<script src="script.js"></script>
+</html>
